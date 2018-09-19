@@ -1,4 +1,5 @@
 import os
+import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'k1q1-jjzf^&j^d8#83_k#u+gh982&ex-obw=sj4(**z&%4==hj'
@@ -49,11 +50,13 @@ WSGI_APPLICATION = 'django_luigi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# Postgres
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default':
+        dj_database_url.config(
+            default='postgres://postgres:@postgres:5432/postgres',
+            conn_max_age=int(os.getenv('POSTGRES_CONN_MAX_AGE', 600))
+        )
 }
 
 
