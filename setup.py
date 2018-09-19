@@ -35,6 +35,12 @@ setup(
     ],
     description="Integrate Luigi with Django",
     install_requires=requirements,
+    entry_points={
+        'console_scripts': [
+            'django-luigi = django_luigi.cmdline:luigi_run',
+            'django-luigid = django_luigi.cmdline:luigid',
+        ]
+    },
     license="MIT license",
     long_description=readme + '\n\n' + history,
     include_package_data=True,
