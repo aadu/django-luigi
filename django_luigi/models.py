@@ -21,6 +21,7 @@ class TaskRecord(models.Model):
 
     class Meta:
         db_table = 'tasks'
+        default_related_name = 'tasks'
 
     def __repr__(self):
         return "TaskRecord(name=%s, host=%s)" % (self.name, self.host)
@@ -40,6 +41,7 @@ class TaskParameter(models.Model):
     class Meta:
         db_table = 'task_parameters'
         unique_together = (('task', 'name'),)
+        default_related_name = 'parameters'
 
 
 class TaskEvent(models.Model):
@@ -55,3 +57,4 @@ class TaskEvent(models.Model):
 
     class Meta:
         db_table = 'task_events'
+        default_related_name = 'events'
