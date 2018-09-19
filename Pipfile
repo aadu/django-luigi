@@ -7,24 +7,37 @@ name = "pypi"
 
 [packages]
 
+"psycopg2-binary" = "*"
+dj-database-url = "*"
 django = "*"
+django-appconf = "*"
+django-extensions = "*"
+django-filter = "*"
+django-model-utils = "*"
+djangorestframework = "*"
 luigi = "*"
-
+Markdown = "*"
+pytz = "*"
 
 [dev-packages]
 
-pip = "*"
 bumpversion = "*"
-wheel = "*"
-watchdog = "*"
-pytest = "*"
-flake8 = "*"
-tox = "*"
 coverage = "*"
+flake8 = "*"
+gunicorn = "*"
+ipdb = "*"
+ipython = "*"
+jupyter = "*"
+mkdocs = "*"
+pip = "*"
+pytest = "*"
 sphinx = "*"
+tox = "*"
 twine = "*"
+watchdog = "*"
+wheel = "*"
 
 
 [requires]
 
-python_version = "3.6"
+python_version = "3"
