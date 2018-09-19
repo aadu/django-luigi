@@ -7,10 +7,22 @@ name = "pypi"
 
 [packages]
 
+django = "*"
+luigi = "*"
 
 
 [dev-packages]
 
+pip = "*"
+bumpversion = "*"
+wheel = "*"
+watchdog = "*"
+pytest = "*"
+flake8 = "*"
+tox = "*"
+coverage = "*"
+sphinx = "*"
+twine = "*"
 
 
 [requires]
