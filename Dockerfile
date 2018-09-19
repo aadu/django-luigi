@@ -10,6 +10,9 @@ RUN pipenv install --dev --system
 
 # Adds our application code to the image
 COPY . code
+
+RUN cd /code && pip install -e .
+
 WORKDIR code
 
 EXPOSE 8000

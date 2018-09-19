@@ -37,5 +37,20 @@ services:
       - "8888:8888"
     depends_on:
       - server
+  luigid:
+    restart: always
+    environment:
+      - DJANGO_SECRET_KEY=local
+      - DJANGO_SETTINGS_MODULE=django_luigi.settings
+    image: server
+    command:
+      - django-luigid
+    volumes:
+      - ./:/code
+    ports:
+      - "8082:8082"
+    depends_on:
+      - server
+
 volumes:
   pgdata:

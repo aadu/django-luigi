@@ -26,9 +26,6 @@ class DjangoTaskHistory(task_history.TaskHistory):
 
     def __init__(self):
         config = configuration.get_config()
-        self.django_root = config.get('task_history', 'django_root')
-        self.django_settings_module = config.get('task_history', 'django_settings_module')
-        self.setup_django()
         self.tasks = {}  # task_id -> TaskRecord
 
     def task_scheduled(self, task):
@@ -95,13 +92,6 @@ class DjangoTaskHistory(task_history.TaskHistory):
                 )
             yield task_record
         task.record_id = task_record.id
-
-    def setup_django(self):
-        if not apps.ready and not settings.configured:
-            sys.path.append(self.django_root)
-            os.environ.setdefault(
-                "DJANGO_SETTINGS_MODULE", self.django_settings_module)
-            django.setup()
 
     # def find_all_by_parameters(self, task_name, session=None, **task_params):
     #     """

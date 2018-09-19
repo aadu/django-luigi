@@ -6,17 +6,20 @@ import sys
 
 from luigi.retcodes import run_with_retcodes
 
-from .history import DjangoTaskHistory
-
 
 def luigi_run(argv=sys.argv[1:]):
     run_with_retcodes(argv)
 
 
 def luigid(argv=sys.argv[1:]):
+
+
+    import django
     import luigi.server
     import luigi.process
     import luigi.configuration
+    django.setup()
+    from .history import DjangoTaskHistory
     parser = argparse.ArgumentParser(description=u'Central luigi server')
     parser.add_argument(
         u'--background', help=u'Run in background mode', action='store_true')
@@ -28,12 +31,11 @@ def luigid(argv=sys.argv[1:]):
     parser.add_argument(u'--port', default=8082, help=u'Listening port')
 
     opts = parser.parse_args(argv)
-
     if opts.state_path:
         config = luigi.configuration.get_config()
         config.set('scheduler', 'state_path', opts.state_path)
 
-    scheduler = luigi.scheduler.Schduler(task_history_impl=DjangoTaskHistory())
+    scheduler = luigi.scheduler.Scheduler(task_history_impl=DjangoTaskHistory())
     if opts.background:
         # daemonize sets up logging to spooled log files
         logging.getLogger().setLevel(logging.INFO)
