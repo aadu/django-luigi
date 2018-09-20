@@ -43,6 +43,16 @@ def _send_start_signal(task):
     start.send(luigi.Task, task=task)
 
 
+@luigi.Task.event_handler(luigi.Event.FAILURE)
+def _send_failure_signal(task):
+    failure.send(luigi.Task, task=task)
+
+
+@luigi.Task.event_handler(luigi.Event.PROGRESS)
+def _send_progress_signal(task):
+    progress.send(luigi.Task, task=task)
+
+
 @luigi.Task.event_handler(luigi.Event.SUCCESS)
 def _send_success_signal(task):
     success.send(luigi.Task, task=task)
