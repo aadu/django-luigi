@@ -11,7 +11,8 @@ services:
     restart: always
     environment:
       - DJANGO_SECRET_KEY=local
-    image: server
+      - DJANGO_SETTINGS_MODULE=django_luigi.settings
+    image: django_luigi
     build: ./
     command: >
       bash -c "python wait_for_postgres.py &&
@@ -28,7 +29,7 @@ services:
     restart: always
     environment:
       - DJANGO_SECRET_KEY=local
-    image: server
+    image: django_luigi
     command: >
       bash -c "./manage.py shell_plus --notebook"
     volumes:
@@ -42,7 +43,7 @@ services:
     environment:
       - DJANGO_SECRET_KEY=local
       - DJANGO_SETTINGS_MODULE=django_luigi.settings
-    image: server
+    image: django_luigi
     command:
       - luigid
     volumes:
