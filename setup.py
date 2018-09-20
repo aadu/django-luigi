@@ -25,22 +25,12 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
     description="Integrate Luigi with Django",
     install_requires=requirements,
-    entry_points={
-        'console_scripts': [
-            'django-luigi = django_luigi.cmdline:luigi_run',
-            'django-luigid = django_luigi.cmdline:luigid',
-        ]
-    },
     license="MIT license",
     long_description=readme + '\n\n' + history,
     include_package_data=True,
