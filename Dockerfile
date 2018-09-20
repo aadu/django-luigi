@@ -15,7 +15,12 @@ RUN cd /code && pip install -e .
 
 WORKDIR code
 
-EXPOSE 8000
+EXPOSE 8000 8082
+
+RUN mkdir -p /etc/luigi && \
+    echo '[core]\n\
+scheduler_host=luigi\n'\
+    > /etc/luigi/luigi.cfg
 
 RUN mkdir -p /root/.jupyter && \
     echo "c.NotebookApp.token = ''" > /root/.jupyter/jupyter_notebook_config.py
