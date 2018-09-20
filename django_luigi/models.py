@@ -1,4 +1,6 @@
 from django.db import models
+from django.dispatch import receiver
+from . import signals
 
 
 class TableUpdates(models.Model):
@@ -58,3 +60,9 @@ class TaskEvent(models.Model):
     class Meta:
         db_table = 'task_events'
         default_related_name = 'events'
+
+
+@receiver(signals.start)
+def my_callback(sender, task, **kwargs):
+    print(task)
+    print("Request finished!")
