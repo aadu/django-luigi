@@ -41,8 +41,8 @@ class TaskRecordAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
 
 @admin.register(TaskEvent)
 class TaskEventAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
-    list_display = ('task', 'name', 'ts')
-    list_filter = ('name', 'ts')
-    ordering = ['ts']
+    list_display = ('task', 'name', 'timestamp', 'message')
+    list_filter = ('name', 'timestamp')
+    ordering = ['timestamp']
 
 

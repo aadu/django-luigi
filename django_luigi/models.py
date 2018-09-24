@@ -1,3 +1,5 @@
+import traceback
+
 from django.db import models, transaction
 from django.dispatch import receiver
 from django.utils import timezone
@@ -13,13 +15,13 @@ class Status:
     BROKEN_TASK = 'BROKEN_TASK'
 
 
-class TableUpdates(models.Model):
-    update_id = models.CharField(max_length=128, unique=True)
-    target_model = models.CharField(max_length=128)
-    inserted = models.DateTimeField(auto_now=True)
+# class TableUpdates(models.Model):
+#     update_id = models.CharField(max_length=128, unique=True)
+#     target_model = models.CharField(max_length=128)
+#     inserted = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        db_table = 'table_updates'
+#     class Meta:
+#         db_table = 'table_updates'
 
 class TaskRecord(models.Model):
     """
@@ -63,19 +65,20 @@ class TaskEvent(models.Model):
     """
     task = models.ForeignKey('TaskRecord', on_delete=models.CASCADE, editable=False)
     name = models.CharField(max_length=24, editable=False)
-    ts = models.DateTimeField(db_index=True, editable=False, auto_now_add=True)
+    timestamp = models.DateTimeField(db_index=True, editable=False, auto_now_add=True)
+    message = models.TextField(null=True, editable=False)
 
     def __str__(self):
-        return "TaskEvent(task_id=%s, name=%s, ts=%s" % (self.task_id, self.name, self.ts)
+        return "TaskEvent(task_id=%s, name=%s, timestamp=%s" % (self.task_id, self.name, self.timestamp)
 
     class Meta:
         db_table = 'task_events'
         default_related_name = 'events'
-
+        ordering = ['-timestamp']
 
 
 @transaction.atomic()
-def register_task_event(task, event, **kwargs):
+def register_task_event(task, event, message=None):
     defaults = {
         'name': task.get_task_family(),
         'namespace': task.get_task_namespace(),
@@ -90,10 +93,13 @@ def register_task_event(task, event, **kwargs):
             name=key,
             value=value,
         )
+    if isinstance(message, Exception):
+        message = traceback.format_exc()
     TaskEvent.objects.create(
         task=task_record,
         name=event,
-        ts=timezone.now(),
+        timestamp=timezone.now(),
+        message=message,
     )
 
 
@@ -103,8 +109,8 @@ def register_task_start(sender, task, **kwargs):
 
 
 @receiver(signals.failure)
-def register_task_failure(sender, task, **kwargs):
-    register_task_event(task, Status.FAILURE)
+def register_task_failure(sender, task, exception, **kwargs):
+    register_task_event(task, Status.FAILURE, message=exception)
 
 
 @receiver(signals.success)
@@ -113,15 +119,15 @@ def register_task_success(sender, task, **kwargs):
 
 
 @receiver(signals.timeout)
-def register_task_timeout(sender, task, **kwargs):
-    register_task_event(task, Status.TIMEOUT)
+def register_task_timeout(sender, task, error_msg, **kwargs):
+    register_task_event(task, Status.TIMEOUT, message=error_msg)
 
 
 @receiver(signals.process_failure)
-def register_task_process_failure(sender, task, **kwargs):
-    register_task_event(task, Status.PROCESS_FAILURE)
+def register_task_process_failure(sender, task, error_msg, **kwargs):
+    register_task_event(task, Status.PROCESS_FAILURE, message=error_msg)
 
 
 @receiver(signals.process_failure)
-def register_task_process_failure(sender, task, **kwargs):
-    register_task_event(task, Status.BROKEN_TASK)
+def register_task_broken(sender, task, exception, **kwargs):
+    register_task_event(task, Status.BROKEN_TASK, message=exception)
