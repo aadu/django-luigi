@@ -1,37 +1,86 @@
-============
-Django Luigi
-============
+# Django-Luigi
+## Features
+- Task history
+- Model update tracking
+- Scheduling via Celery
+- Interrogate luigi tasks
+- Job Model
+
+## Advantages of Luigi Integration
+- Idempotency
+- Pruning
+- Automatically invoke dependencies
+- Task Graph
+
+## Jobs
+- A job represents a top-level luigi task
+- In other words, a job always has a luigi task associated with it
+- A job also is associated with a celery task that runs/manages it.
+
+### State
+- Queued
+- Pending
+- Started
+- Resolving Dependencies
+- Waiting for Resource
+- Running
+- Failed
+- Revoked
+- Completed
+<!--
+state
+state_updated
+host
+-->
+- Pending
+- 
 
 
-.. image:: https://img.shields.io/pypi/v/django_luigi.svg
-        :target: https://pypi.python.org/pypi/django_luigi
-
-.. image:: https://img.shields.io/travis/aadu/django_luigi.svg
-        :target: https://travis-ci.org/aadu/django_luigi
-
-.. image:: https://readthedocs.org/projects/django-luigi/badge/?version=latest
-        :target: https://django-luigi.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
 
 
 
 
-Integrate Luigi with Django
+
+# Add abstraction layer using workers as resources
+# 
+# Workers as resources
+# 
+# Add Scheduler
+# Integrate Persistent Database
+# Resource Queue
+class ResourceMap:
+    pass
 
 
-* Free software: MIT license
-* Documentation: https://django-luigi.readthedocs.io.
+class Worker
 
 
-Features
---------
 
-* TODO
+chain(a, b, c)
 
-Credits
--------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+task.run()
+task.requires()
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+Scheduler and Queue for Luigi
+
+# Concept:
+
+A Job has an associated task
+The same type of task may have different jobs associated with it because a task doesn't need to know about it's job, just the inverse.
+A job is a request from the user for something.
+States:
+- activately processing task A, 34 tasks remaining
+- waiting for resource B before continuing, 4 other jobs with priority for resource B
+- failed -- Task A failure caused by upstream task C failure
+
+
+# Problems:
+- Job state in Database
+- Failed clusters 
+
+CACHING
+# Instant lookup of job status
+
+
+# STATES
