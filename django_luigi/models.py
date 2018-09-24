@@ -3,10 +3,14 @@ from django.dispatch import receiver
 from django.utils import timezone
 from . import signals
 
+
 class Status:
     START = 'START'
     FAILURE = 'FAILURE'
     SUCCESS = 'SUCCESS'
+    TIMEOUT = 'TIMEOUT'
+    PROCESS_FAILURE = 'PROCESS_FAILURE'
+    BROKEN_TASK = 'BROKEN_TASK'
 
 
 class TableUpdates(models.Model):
@@ -106,3 +110,18 @@ def register_task_failure(sender, task, **kwargs):
 @receiver(signals.success)
 def register_task_success(sender, task, **kwargs):
     register_task_event(task, Status.SUCCESS)
+
+
+@receiver(signals.timeout)
+def register_task_timeout(sender, task, **kwargs):
+    register_task_event(task, Status.TIMEOUT)
+
+
+@receiver(signals.process_failure)
+def register_task_process_failure(sender, task, **kwargs):
+    register_task_event(task, Status.PROCESS_FAILURE)
+
+
+@receiver(signals.process_failure)
+def register_task_process_failure(sender, task, **kwargs):
+    register_task_event(task, Status.BROKEN_TASK)
