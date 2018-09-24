@@ -15,6 +15,7 @@ class DummyTask(Task):
         return LocalTarget('example.txt')
 
     def run(self):
+        raise ValueError("HEY")
         print("HEY")
 
 
@@ -30,6 +31,7 @@ class MoreComplexTask(Task):
     def run(self):
         import time
         time.sleep(10)
+        raise ValueError("HEY")
 
 
 if __name__ == '__main__':
