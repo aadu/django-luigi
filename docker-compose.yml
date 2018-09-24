@@ -38,6 +38,17 @@ services:
       - "8888:8888"
     depends_on:
       - server
+  test:
+    restart: always
+    environment:
+      - DJANGO_SECRET_KEY=local
+    image: django_luigi
+    command:
+      - pytest
+    volumes:
+      - ./:/code
+    depends_on:
+      - server
   luigi:
     restart: always
     environment:
